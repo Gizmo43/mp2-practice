@@ -16,7 +16,7 @@ public:
     ~TListStack() {};
 
     void push(const T& elem) {
-        TNode<T>* newNode = new TNode<T>(elem);
+        TNode<T>* newNode = new TNode<T>(0,elem);
         this->stack.pushFront(newNode);
     };
     void pop() {
@@ -27,7 +27,7 @@ public:
     T Top() {
         if (IsEmpty())
             throw "stack is empty";
-        return stack.get_first_key();
+        return stack.get_first_data();
 
     };
     bool IsEmpty() { return (stack.IsEmpty()); };

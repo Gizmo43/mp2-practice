@@ -9,50 +9,77 @@ using namespace std;
 
 template <typename T>
 struct TNode {
-    T Key;
+    int Key;
+    T Data;
     TNode* pNext;
-    TNode() : Key(0), pNext(nullptr) {};
-    TNode(T new_key) : Key(new_key), pNext(nullptr) {};
+    TNode() : Key(0), pNext(nullptr), Data(T()) {};
+    TNode(int new_key, T new_data) : Key(new_key), pNext(nullptr),Data(new_data) {};
     ~TNode() {};
 };
 
 template <typename T>
 class TList
 {
-private:
+protected:
     TNode<T>* pFirst;
+    TNode<T>* pCurr;
+    TNode<T>* pPrev;
+    TNode<T>* pLast;
+    TNode<T>* pStop;
 public:
-    TList() : pFirst(nullptr) {};
+    TList() : pFirst(nullptr), pCurr(nullptr), pPrev(nullptr), pLast(nullptr), pStop(nullptr) {};
     TList(const TList<T>& list) {
         pFirst = nullptr;
-        if (list.pFirst == nullptr)
+        pStop = nullptr;
+        if (list.pFirst == pStop)
             return;
         pFirst = new TNode<T>{ *list.pFirst };
         TNode<T>* pNew = pFirst;
-        while (pNew->pNext != nullptr)
+        while (pNew->pNext != pStop)
         {
             pNew->pNext = new TNode<T>{ *pNew->pNext };
             pNew = pNew->pNext;
         }
+        pCurr = pFirst;
+        pLast = list.pLast;
     };
     ~TList() {
-        while (pFirst != nullptr) {
-            TNode<T>* tmp = pFirst;
-            pFirst = pFirst->pNext;
-            delete tmp;
+        if (pFirst == nullptr) {
+            return;
         }
+        pPrev = pFirst;
+        pCurr = pPrev->pNext;
+        while (pCurr != pStop) {
+            delete pPrev;
+            pPrev = pCurr;
+            pCurr = pCurr->pNext;
+        }
+        delete pPrev;
+        pFirst = nullptr;
+        pCurr = nullptr;
+        pPrev = nullptr;
+        pLast = nullptr;
     };
-    TNode<T>* search(T s_key) {
-        TNode<T>* tmp = pFirst;
-        while ((tmp != nullptr) && (tmp->Key != s_key)) {
-            tmp = tmp->pNext;
+    TNode<T>* search_key(T s_key) {
+        pCurr = pFirst;
+        while ((pCurr != pStop) && (pCurr->Key != s_key)) {
+            pCurr = pCurr->pNext;
         }
-        return tmp;
+        return pCurr;
+    };
+    TNode<T>* search_data(T s_data) {
+        pCurr = pFirst;
+        while ((pCurr != pStop) && (tmp->Data != s_data)) {
+            pCurr = pCurr->pNext;
+        }
+        return pCurr;
     };
 
     void pushFront(TNode<T>* newNode) {
         if (pFirst == nullptr) {
             pFirst = newNode;
+            pLast = pFirst;
+            pCurr = pFirst;
             return;
         }
         newNode->pNext = pFirst;
@@ -63,54 +90,57 @@ public:
         if (newNode == nullptr)
             throw "nullptr push";
 
-        TNode<T>* curr = pFirst;
-        while (curr->pNext != nullptr) {
-            curr = curr->pNext;
+        pCurr = pFirst;
+        while (pCurr->pNext != pStop) {
+            pCurr = pCurr->pNext;
         }
-        curr->pNext = newNode;
+        pCurr->pNext = newNode;
+        pLast = newNode;
     };
 
-    void InsertAfter(TNode<T>* newNode, T pKey) {
-        TNode<T>* curr = search(pKey);
-        if (curr == nullptr)
+    void InsertAfterKey(TNode<T>* newNode, T pKey) {
+        pCurr = search_key(pKey);
+        if (pCurr == nullptr)
             throw "no element";
 
-        newNode->pNext = curr->pNext;
-        curr->pNext = newNode;
+        newNode->pNext = pCurr->pNext;
+        pCurr->pNext = newNode;
+        if (newNode->pNext = pStop)
+            pLast = newNode;
 
     };
 
-    void InsertBefore(TNode<T>* newNode, T pKey) {
-        TNode<T>* prev = nullptr, * curr = pFirst;
-        while ((curr != nullptr) && (curr->Key != pKey)) {
-            prew = curr;
-            curr = curr->pNext;
+    void InsertBeforeKey(TNode<T>* newNode, T pKey) {
+        pPrev = nullptr, pCurr = pFirst;
+        while ((pCurr != pStop) && (pCurr->Key != pKey)) {
+            pPrev = pCurr;
+            pCurr = pCurr->pNext;
         }
-        if (curr == nullptr)
+        if (pCurr == nullptr)
             throw "no element";
 
-        if (prev == nullptr) {
+        if (pPrev == nullptr) {
             pushFront(newNode);
             return;
         }
-        newNode->pNext = curr;
-        prev->pNext = newNode;
+        newNode->pNext = pCurr;
+        pPrev->pNext = newNode;
     };
 
-    void remove(T pKey) {
-        TNode<T>* prev = nullptr, * curr = pFirst;
-        while ((curr != nullptr) && (curr->Key != pKey)) {
-            prev = curr;
-            curr = curr->pNext;
+    void removeKey(T pKey) {
+        pPrev = nullptr, pCurr = pFirst;
+        while ((pPrev != pStop) && (pCurr->Key != pKey)) {
+            pPrev = pCurr;
+            pCurr = pCurr->pNext;
         }
-        if (curr == nullptr)
+        if (pCurr == nullptr)
             throw "no element";
-        if (prev == nullptr) {
+        if (pPrev == nullptr) {
             pFirst = pFirst->pNext;
-            delete curr;
+            delete pCurr;
         }
-        prev->pNext = curr->pNext;
-        delete curr;
+        pPrev->pNext = pCurr->pNext;
+        delete pPrev;
     };
 
     void remove_first() {
@@ -118,20 +148,20 @@ public:
     };
 
     int size() {
-        TNode<T>* curr = pFirst;
+        pCurr = pFirst;
         int size = 0;
-        while (curr != nullptr) {
+        while (pCurr != pStop) {
             size++;
-            curr = curr->pNext;
+            pCurr = pCurr->pNext;
         }
         return size;
     };
 
-    void reset(TNode<T>* curr) {
-        curr = pFirst;
+    void reset() {
+        pCurr = pFirst;
     }
-    void next(TNode<T>* curr) {
-        curr = curr->pNext;
+    void next() {
+        pCurr = pCurr->pNext;
     }
 
     const TList<T>& operator=(const TList<T>& s) {
@@ -142,8 +172,8 @@ public:
         pFirst = nullptr;
         TNode<T>* tmp1 = s.pFirst;
         TNode<T>* tmp2 = nullptr;
-        while (tmp1 != nullptr) {
-            TNode<T>* newNode = new TNode<T>(tmp1->Key);
+        while (tmp1 != pStop) {
+            TNode<T>* newNode = new TNode<T>(tmp1->Key,tmp1->Data);
             if (pFirst == nullptr) {
                 pFirst = newNode;
             }
@@ -160,8 +190,8 @@ public:
     bool operator==(const TList<T>& s) {
         TNode<T>* curr1 = pFirst;
         TNode<T>* curr2 = s.pFirst;
-        while (curr1 != nullptr) {
-            if (curr1->Key != curr2->Key)
+        while (curr1 != pStop) {
+            if ((curr1->Data != curr2->Data)|| (curr1->Key != curr2->Key))
                 return 0;
             curr1 = curr1->pNext;
             curr2 = curr2->pNext;
@@ -178,6 +208,17 @@ public:
 
     T get_first_key() const {
         return pFirst->Key;
+    }
+
+    T get_first_data() const {
+        return pFirst->Data;
+    }
+    T get_last_key() const {
+        return pLast->Key;
+    }
+
+    T get_last_data() const {
+        return pLast->Data;
     }
 
 };
