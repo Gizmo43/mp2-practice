@@ -16,13 +16,12 @@ public:
     ~TListStack() {};
 
     void push(const T& elem) {
-        TNode<T>* newNode = new TNode<T>(0,elem);
-        this->stack.pushFront(newNode);
+        this->stack.pushFront(0,elem);
     };
     void pop() {
         if (IsEmpty())
             throw "stack is empty";
-        stack.remove_first();
+        stack.popFront();
     };
     T Top() {
         if (IsEmpty())

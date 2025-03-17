@@ -6,118 +6,79 @@
 template <typename T>
 class TRingHeadList : public THeadList<T> {
 public:
-	TRingHeadList(){
-		pHead = new TNode<T>(-1, T());
-		pHead->pNext = pFirst;
-		pLast = pFirst;
-		pCurr = pFirst;
-		pStop = pHead;
-		pPrev = pHead;
-	}
-	TRingHeadList(const THeadList<T>& list) {
-        pFirst = nullptr;
-        pStop = nullptr;
-        if (list.pFirst == pStop)
-            return;
-        pFirst = new TNode<T>{ *list.pFirst };
-        TNode<T>* pNew = pFirst;
-        while (pNew->pNext != pStop)
-        {
-            pNew->pNext = new TNode<T>{ *pNew->pNext };
-            pLast = pNew->pNext;
-            pNew = pNew->pNext;
-        }
-        pCurr = pFirst;
-        pHead = new TNode<T>(-1, T());
-        pHead->pNext = pFirst;
-        if (pCurr == pFirst && pFirst != nullptr)
-            pPrev = pHead;
-        if (pLast != nullptr)   
-            pLast->pNext = pHead;
-        
-
-	}
-    ~TRingHeadList() {}
-    void pushFront(int key, T val) {
-        TNode<T>* newNode = new TNode<T>(key, val);
-        if (pFirst == nullptr) {
-            pFirst = newNode;
-            pLast = pFirst;
-            pCurr = pFirst;
-            pHead->pNext = pFirst;
-            pPrev = pHead;
-            pFirst->pNext = pHead;
-            return;
-        }
-        pPrev = pHead;
-        newNode->pNext = pFirst;
-        pFirst = newNode;
-        pHead->pNext = pFirst;
-        pCurr = pFirst;
-    }
-    void pushBack(int key, T val) {
-        TNode<T>* newNode = new TNode<T>(key, val);
-        if (pFirst == nullptr) {
-            pFirst = newNode;
-            pLast = pFirst;
-            pCurr = pFirst;
-            pHead->pNext = pFirst;
-            pPrev = pHead;
-            pFirst->pNext = pHead;
-            return;
-        }
-        pCurr = pFirst;
-        while (pCurr->pNext != pStop) {
-            pPrev = pCurr;
-            pCurr = pCurr->pNext;
-        }
-        pCurr->pNext = newNode;
-        pLast = pCurr->pNext;
-        pLast->pNext = pHead;
-        pPrev = pCurr;
-        pCurr = pLast;
-    }
-    void popFront() {
-        pFirst = pFirst->pNext;
-        pHead->pNext = pFirst;
-    }
-    void popBack() {
-        pCurr = pFirst;
-        while (pCurr->pNext != pStop) {
-            pPrev = pCurr;
-            pCurr = pCurr->pNext;
-        }
-        pLast = pPrev;
-        pLast->pNext = pHead;        
-    }
-    const TRingHeadList& operator=(const TRingHeadList<T> &s) { //чекнуть потом
-        pHead = new TNode<T>(-1, T());
-        pStop = pHead;
-        if (this == &s)
-            return *this;
-        if (s.pFirst == nullptr) {
-            pFirst = nullptr;
-            return *this;
-        }
-        pFirst = nullptr;
-        TNode<T>* tmp1 = s.pFirst;
-        TNode<T>* tmp2 = pFirst;
-        while (tmp1 != s.pStop) {
-            TNode<T>* newNode = new TNode<T>(tmp1->Key, tmp1->Data);
-            if (pFirst == nullptr) {
-                pFirst = newNode;
-            }
-            else {
-                tmp2->pNext = newNode;
-            }
-            tmp2 = newNode;
-            tmp1 = tmp1->pNext;
-        }
-        pLast = tmp2;
-        pHead->pNext = pFirst;
-        pLast->pNext = pHead;
-        return *this;
-    }
+    TRingHeadList();
+    TRingHeadList(const TRingHeadList<T>& list);
+    ~TRingHeadList();
+    const TRingHeadList& operator=(const TRingHeadList<T>& s);
+    virtual void pushFront(int key, T val);
+    virtual void pushBack(int key, T val);
+    virtual void popFront();
+    virtual void popBack();
 };
+
+
+template <typename T>
+TRingHeadList<T>::TRingHeadList() : THeadList<T>() {
+    pStop = pHead;
+};
+
+template <typename T>
+TRingHeadList<T>::TRingHeadList(const TRingHeadList<T>& list) : THeadList<T>(list) {
+    if (pLast != nullptr)
+        pLast->pNext = pHead;
+    pStop = pHead;
+};
+template <typename T>
+TRingHeadList<T>::~TRingHeadList() {
+    pStop = nullptr;
+    pLast->pNext = nullptr;
+    THeadList<T>::~THeadList();
+};
+
+
+template <typename T>
+const TRingHeadList<T>& TRingHeadList<T>::operator=(const TRingHeadList<T>& list) {
+    if (this == &list)
+        return *this;
+    while (!IsEmpty()) {
+        popFront();
+    }
+    TNode<T>* curr = list.pFirst;
+    while (curr != list.pStop) {
+        pushBack(curr->Key, curr->Data);
+        curr = curr->pNext;
+    }
+    pStop = pHead;
+    if (pLast != nullptr) {
+        pLast->pNext = pHead;
+    }
+    return *this;
+}
+
+template <typename T>
+void TRingHeadList<T>::pushFront(int key, T val) {
+    THeadList<T>::pushFront(key, val);
+    pLast->pNext = pHead;
+};
+
+template <typename T>
+void TRingHeadList<T>::pushBack(int key, T val) {
+    TList<T>::pushBack(key, val);
+    pLast->pNext = pHead;
+};
+
+template <typename T>
+void TRingHeadList<T>::popFront() {
+    THeadList<T>::popFront();
+    pLast->pNext = pHead;
+};
+
+template <typename T>
+void TRingHeadList<T>::popBack() {
+    TList<T>::popBack();
+    pLast->pNext = pHead;
+};
+
+
 
 #endif

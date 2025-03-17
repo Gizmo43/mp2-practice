@@ -2,7 +2,7 @@
 
 int main()
 {
-    char stack_type = '2';
+    /*char stack_type = '2';
     while (stack_type != '0' && stack_type != '1') {
         cout << "Stack type(0 - ArrayStack   1 - ListStack):\n";
         cin >> stack_type;
@@ -30,5 +30,5 @@ int main()
     cout << Res;
 
 
-    return 0;
+    return 0;*/
 }

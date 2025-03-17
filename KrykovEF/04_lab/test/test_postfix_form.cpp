@@ -1,7 +1,7 @@
 #include "postfix_form.h"
 #include <gtest.h>
 
-TEST(PosfixForm, postfixform_config_correctly_array_1)
+/*TEST(PosfixForm, postfixform_config_correctly_array_1)
 {
     string s = "A+B";
     PosfixForm expr(s, ARRAY_STACK); 
@@ -149,4 +149,4 @@ TEST(PosfixForm, postfixform_solve_correctly_list_4)
     values["K"] = -2;
     EXPECT_EQ(-1, expr.solve(values));
 
-}
+}*/

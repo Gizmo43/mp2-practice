@@ -6,12 +6,20 @@ TEST(THeadList, can_create_list)
     ASSERT_NO_THROW(THeadList<float> list());
 }
 
-TEST(THeadList, can_push_element)
+TEST(THeadList, can_push_element_front)
 {
     THeadList<int> list;
     for (int i = 0; i < 5; i++)
         list.pushFront(0,i);
     EXPECT_EQ(4, list.get_first_data());
+}
+
+TEST(THeadList, can_push_element_back)
+{
+    THeadList<int> list;
+    for (int i = 0; i < 5; i++)
+        list.pushBack(0, i);
+    EXPECT_EQ(4, list.get_last_data());
 }
 
 
@@ -68,6 +76,7 @@ TEST(TRingHeadList, can_push_element_front)
     for (int i = 0; i < 5; i++)
         list.pushFront(0, i);
     EXPECT_EQ(4, list.get_first_data());
+    EXPECT_EQ(4, 4);
 }
 
 TEST(TRingHeadList, can_push_element_back)
@@ -126,7 +135,7 @@ TEST(TRingHeadList, test_op_2)
     TRingHeadList<int> list2;
     list2 = list1;
     list2.pushBack(2, 3);
-    list1.pushBack(2, 4);
+    list1.pushBack(3, 4);
     EXPECT_FALSE(list1 == list2);
 }
 

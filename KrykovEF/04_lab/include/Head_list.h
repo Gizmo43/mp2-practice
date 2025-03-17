@@ -3,88 +3,64 @@
 #define HEAD_LIST_H
 #include "List.h"
 template <typename T>
-class THeadList :public TList<T>
-{
+class THeadList :public TList<T>{
 protected:
     TNode<T>* pHead;
 public:
-    THeadList(){
-        pHead = new TNode<T>(-1,T());
-        pHead->pNext = pFirst;
-        pPrev = pHead;
-    };
-    THeadList(const THeadList<T>& list) {
-        pFirst = nullptr;
-        pStop = nullptr;
-        if (list.pFirst == pStop)
-            return;
-        pFirst = new TNode<T>{ *list.pFirst };
-        TNode<T>* pNew = pFirst;
-        while (pNew->pNext != pStop)
-        {
-            pNew->pNext = new TNode<T>{ *pNew->pNext };
-            pNew = pNew->pNext;
-        }
-        pCurr = pFirst;
-        pLast = list.pLast;
-        pHead = new TNode<T>(-1, T());
-        pHead->pNext = pFirst;
-        if (pCurr == pFirst && pFirst != nullptr)
-            pPrev = pHead;
-    };
-    ~THeadList(){
-        delete pHead;
-        pHead = nullptr;
-    }
-
-    void pushFront(int key, T val) {
-        TNode<T>* newNode = new TNode<T>(key, val);
-        if (pFirst == nullptr) {
-            pFirst = newNode;
-            pLast = pFirst;
-            pCurr = pFirst;
-            pHead->pNext = pFirst;
-            pPrev = pHead;
-            return;
-        }
-        newNode->pNext = pFirst;
-        pFirst = newNode;
-        pHead->pNext = pFirst;
-        pCurr = pFirst;
-    }
-    void popFront() {
-        pFirst = pFirst->pNext;
-        pHead->pNext = pFirst;
-    }
-    const THeadList& operator=(const THeadList<T> &s) { //чекнуть потом
-        if (this == &s)
-            return *this;
-        if (s.pFirst == nullptr) {
-            pFirst = nullptr;
-            return;
-        }
-        pFirst = nullptr;
-        TNode<T>* tmp1 = s.pFirst;
-        TNode<T>* tmp2 = pFirst;
-        while (tmp1 != s.pStop) {
-            TNode<T>* newNode = new TNode<T>(tmp1->Key, tmp1->Data);
-            if (pFirst == nullptr) {
-                pFirst = newNode;
-            }
-            else {
-                tmp2->pNext = newNode;
-            }
-            tmp2 = newNode;
-            tmp1 = tmp1->pNext;
-        }
-        pLast = tmp2;
-        pHead = new TNode<T>(-1, T());
-        pHead->pNext = pFirst;
-        return *this;
-    }
-
-
+    THeadList();
+    THeadList(const THeadList<T>& list);
+    ~THeadList();
+    virtual void pushFront(int key, T val);
+    virtual void popFront();
+    virtual const THeadList<T>& operator=(const THeadList<T>& s);
 };
+
+template <typename T>
+THeadList<T>::THeadList() : TList<T>() {
+    pHead = new TNode<T>(-1, T());
+    pHead->pNext = pFirst;
+};
+
+template <typename T>
+THeadList<T>::THeadList(const THeadList<T>& list) : TList<T>(list) {
+    pHead = new TNode<T>(-1, T());
+    pHead->pNext = pFirst;
+};
+
+template <typename T>
+THeadList<T>::~THeadList() {
+    delete pHead;
+    pHead = nullptr;
+};
+
+template <typename T>
+void THeadList<T>::pushFront(int key, T val){
+    TList<T>::pushFront(key, val);
+    pHead->pNext = pFirst;
+};
+
+template <typename T>
+void THeadList<T>::popFront(){
+    TList<T>::popFront();
+    pHead->pNext = pFirst;
+};
+
+template <typename T>
+const THeadList<T>& THeadList<T>::operator=(const THeadList<T>& list) {
+    if (this == &list)
+        return *this;
+    while (!IsEmpty()) {
+        popFront();
+    }
+    TNode<T>* curr = list.pFirst;
+    while (curr != list.pStop) {
+        pushBack(curr->Key, curr->Data);
+        curr = curr->pNext;
+    }
+    return *this;
+}
+
+
 
 
 
