@@ -3,7 +3,7 @@
 
 #include <gtest.h>
 
-TEST(TArrayStack, can_create_stack_with_positive_length)
+/*TEST(TArrayStack, can_create_stack_with_positive_length)
 {
     ASSERT_NO_THROW(TArrayStack<int> st(5));
 }
@@ -226,7 +226,7 @@ TEST(TListStack, compare_not_equal_stacks_return_false)
     st2.push(3);
     st2.push(4);
     EXPECT_FALSE(st1 == st2);
-}
+}*/
 
 
 

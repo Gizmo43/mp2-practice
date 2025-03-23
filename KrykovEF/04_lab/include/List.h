@@ -62,6 +62,9 @@ public:
     T get_last_data() const {return pLast->Data;}
     T get_curr_key() const { return pCurr->Key; }
     T get_curr_data() const { return pCurr->Data; }
+    TNode<T>* get_pStop() const { return pStop; }
+    TNode<T>* get_pFirst() const { return pFirst; }
+
 
 };
 
@@ -193,7 +196,7 @@ void TList<T>::InsertBeforeKey(int key, T val, int pKey) {
 }
 
 template <typename T>
-void TList<T>::popKey(int key){
+void TList<T>::popKey(int pKey){
     if (IsEmpty())
         throw exception("list empty");
     TNode<T>* curr = pFirst;

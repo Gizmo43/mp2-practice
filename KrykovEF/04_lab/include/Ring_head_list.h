@@ -31,7 +31,8 @@ TRingHeadList<T>::TRingHeadList(const TRingHeadList<T>& list) : THeadList<T>(lis
 template <typename T>
 TRingHeadList<T>::~TRingHeadList() {
     pStop = nullptr;
-    pLast->pNext = nullptr;
+    if (pLast!=nullptr)
+        pLast->pNext = nullptr;
     THeadList<T>::~THeadList();
 };
 
@@ -70,13 +71,15 @@ void TRingHeadList<T>::pushBack(int key, T val) {
 template <typename T>
 void TRingHeadList<T>::popFront() {
     THeadList<T>::popFront();
-    pLast->pNext = pHead;
+    if (pLast!=nullptr)
+        pLast->pNext = pHead;
 };
 
 template <typename T>
 void TRingHeadList<T>::popBack() {
     TList<T>::popBack();
-    pLast->pNext = pHead;
+    if (pLast != nullptr)
+        pLast->pNext = pHead;
 };
 
 
