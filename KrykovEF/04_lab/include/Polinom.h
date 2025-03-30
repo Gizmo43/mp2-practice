@@ -13,6 +13,31 @@ protected:
 	TRingHeadList<Monom> polinom_lst;
 	string polinom_str;
 
+    void orderPush(int key, double val) {
+        Monom monom(key, val);
+        if (polinom_lst.IsEmpty()) {
+            polinom_lst.pushBack(key, monom);
+            return;
+        }
+        TNode<Monom>* curr = polinom_lst.get_pFirst();
+        TNode<Monom>* prev = nullptr;
+        while (curr != polinom_lst.get_pStop() && curr->Key < key) {
+            prev = curr;
+            curr = curr->pNext;
+        }
+        if (curr != polinom_lst.get_pStop() && curr->Key == key) {
+            curr->Data.coef += val;
+        }
+        else {
+            if (prev == nullptr) {
+                polinom_lst.pushFront(key, monom);
+            }
+            else {
+                polinom_lst.InsertAfterKey(key, monom, prev->Key);
+            }
+        }
+    }
+
     void parseMonom(const std::string& monom, double& coeff, int& x, int& y, int& z) {
         int i = 0;
         double coeff_sign = 1.0;
@@ -89,7 +114,7 @@ protected:
     }
 
 
-
+    //не актуально
     void sortPolinom() {
         vector<Monom> monoms;
 
@@ -108,8 +133,7 @@ protected:
             Monom current = monoms[i];
             polinom_lst.pushBack(current.degree, current);
         }
-    }
-
+    }  //не актуально
     void simplify() {
         TRingHeadList<Monom> tmp;
         tmp = polinom_lst;
@@ -127,7 +151,8 @@ protected:
             curr = curr->pNext;
         }
         polinom_lst = tmp;
-    }
+    } //не актуально
+
 
     string convertPolinom() const {
         string result;
@@ -163,8 +188,7 @@ public:
                 if (!tmp.empty()) {
                     parseMonom(tmp, coeff, x, y, z);
                     int degree = x * 100 + y * 10 + z;
-                    Monom monom(coeff, degree);
-                    polinom_lst.pushBack(coeff, monom);
+                    orderPush(degree, coeff);
                     tmp.clear();
                     coeff = 1.0;
                     x = 0;
@@ -177,13 +201,22 @@ public:
         if (!tmp.empty()) {
             parseMonom(tmp, coeff, x, y, z);
             int degree = x * 100 + y * 10 + z;
-            Monom monom(coeff, degree);
-            polinom_lst.pushBack(coeff, monom);
+            orderPush(degree, coeff);
         }
-        sortPolinom();
+        //sortPolinom();
         //simplify();
         polinom_str = convertPolinom();
 	}
+
+    double calculate_polinom(double x_val, double y_val, double z_val) const {
+        TNode<Monom>* curr = polinom_lst.get_pFirst();
+        double res = 0;
+        while (curr != polinom_lst.get_pStop()){
+            res += curr->Data.calculate_monom(x_val, y_val, z_val);
+            curr = curr->pNext;
+        }
+        return res;
+    }
 
     string get_polinom_str() const { return polinom_str; }
 

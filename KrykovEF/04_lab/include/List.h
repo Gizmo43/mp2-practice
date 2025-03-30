@@ -168,10 +168,10 @@ void TList<T>::InsertAfterKey(int key, T val, int pKey) {
     if (curr->Key != pKey)
         throw exception("no such key");
     if (curr == pLast){
-        pushBack(val, key);
+        pushBack(key, val);
         return;
     }
-    TNode<T>* newNode = new TNode<T>(val, key);
+    TNode<T>* newNode = new TNode<T>(key, val);
     TNode<T>* tmp = curr->pNext;
     curr->pNext = newNode;
     newNode->pNext = tmp;
@@ -187,10 +187,10 @@ void TList<T>::InsertBeforeKey(int key, T val, int pKey) {
     if (curr->Key != pKey)
         throw exception("no such key");
     if (curr == pFirst) {
-        pushFront(val, key);
+        pushFront(key, val);
         return;
     }
-    TNode<T>* newNode = new TNode<T>(val, key);
+    TNode<T>* newNode = new TNode<T>(key, val);
     prev->pNext = newNode;
     newNode->pNext = curr;
 }
