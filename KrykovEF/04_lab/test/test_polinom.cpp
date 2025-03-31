@@ -94,22 +94,25 @@ TEST(Polinom, cant_create_Polinom_with_wrong_deg)
 TEST(Polinom, can_calculate_Polinom_1)
 {
     Polinom pl("2x1y2z3+x3z4-7.5");
-    //cout << pl.get_polinom_str();
     EXPECT_EQ(289.5, pl.calculate_polinom(1, 2, 3));
 }
 
 TEST(Polinom, can_calculate_Polinom_2)
 {
     Polinom pl("-5+3.2x1y1z1+2x1y2z3+x3z4+6x1y1z1-2x3z4+7x2y3");
-    //cout << pl.get_polinom_str();
     EXPECT_EQ(241.2, pl.calculate_polinom(1, 2, 3));
 }
 
 TEST(Polinom, can_calculate_Polinom_3)
 {
     Polinom pl("2x1y2z3+x3z4");
-    //cout << pl.get_polinom_str();
     EXPECT_EQ(0, pl.calculate_polinom(0, 0, 0));
+}
+
+TEST(Polinom, can_calculate_Polinom_4)
+{
+    Polinom pl("7.5");
+    EXPECT_EQ(7.5, pl.calculate_polinom(10, 10, 10));
 }
 
 

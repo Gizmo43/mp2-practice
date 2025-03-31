@@ -1,6 +1,6 @@
 #ifndef LIST_H
 #define LIST_H
-#pragma once
+
 #include <iostream>
 #include <string>
 #include "List.h"
@@ -27,13 +27,13 @@ protected:
     TNode<T>* pLast;
     TNode<T>* pStop;
 public:
-    TList() : pFirst(nullptr), pCurr(nullptr), pPrev(nullptr), pLast(nullptr), pStop(nullptr) {};
+    TList() : pFirst(nullptr), pCurr(nullptr), pPrev(nullptr),
+        pLast(nullptr), pStop(nullptr) {};
     TList(const TList<T>& list);
     ~TList();
 
 
     TNode<T>* search_key(T s_key);
-    TNode<T>* search_data(T s_data);
 
     virtual void pushFront(int key, T val);
     virtual void pushBack(int key, T val);
@@ -45,42 +45,36 @@ public:
     virtual void popFront();
     virtual void popBack();
 
-    int size();
+    int size() const;
 
     void reset() { pCurr = pFirst; pPrev = nullptr; }
-    void next() { pPrev = pCurr; pCurr = pCurr->pNext; }
+    void next() { pPrev = pCurr; pCurr = pCurr->pNext; } // TODO: nullptr
+    // bool isEnded() const
 
     virtual const TList<T>& operator=(const TList<T>& s);
     bool operator==(const TList<T>& s) const;
 
-    bool IsEmpty() { return (pFirst == nullptr);};
-    bool IsFull() { return 0; };
+    bool IsEmpty() const { return (pFirst == nullptr);};
+    bool IsFull() const { return 0; };
 
-    T get_first_key() const {return pFirst->Key;}
-    T get_first_data() const {return pFirst->Data;}
-    T get_last_key() const {return pLast->Key;}
-    T get_last_data() const {return pLast->Data;}
-    T get_curr_key() const { return pCurr->Key; }
-    T get_curr_data() const { return pCurr->Data; }
-    TNode<T>* get_pStop() const { return pStop; }
     TNode<T>* get_pFirst() const { return pFirst; }
-
-
+    TNode<T>* get_pCurr() const { return pCurr; }
 };
 
 template <typename T>
-TList<T>::TList(const TList<T>& list) :  pCurr(nullptr), pPrev(nullptr), pLast(nullptr) {
+TList<T>::TList(const TList<T>& list) :  pCurr(nullptr), pPrev(nullptr),
+        pLast(nullptr) {
     pFirst = nullptr;
     pStop = nullptr; 
     pPrev = nullptr;
     if(list.pFirst == nullptr)
         return;
-    pFirst = new TNode<T>{ *list.pFirst };
+    pFirst = new TNode<T>(*list.pFirst);
     TNode<T>* pNew = pFirst;
     pCurr = pFirst;
     while (pNew->pNext != pStop){
         pPrev = pCurr;
-        pNew->pNext = new TNode<T>{ *pNew->pNext };
+        pNew->pNext = new TNode<T>(*pNew->pNext);
         pNew = pNew->pNext;
         pCurr = pNew;
     }
@@ -88,7 +82,7 @@ TList<T>::TList(const TList<T>& list) :  pCurr(nullptr), pPrev(nullptr), pLast(n
 }
 
 template <typename T>
-TList<T>::~TList() {
+TList<T>::~TList() { // TODO: clear
     if (pFirst == nullptr)    
         return;    
     pCurr = pFirst;
@@ -109,19 +103,13 @@ TList<T>::~TList() {
 
 template <typename T>
 TNode<T>* TList<T>::search_key(T s_key) {
-    TNode<T>* curr = pFirst;
-    while ((curr != pStop) && (curr->Key != s_key)) {
-        curr = curr->pNext;
+    pCurr = pFirst;
+    pPrev = nullptr;
+    while ((pCurr != pStop) && (pCurr->Key != s_key)) {
+        pPrev = pCurr;
+        pCurr = pCurr->pNext;
     }
-    return curr;
-}
-template <typename T>
-TNode<T>*  TList<T>::search_data(T s_data) {
-    TNode<T>* curr = pFirst;
-    while ((curr != pStop) && (curr->Data != s_data)) {
-        curr = curr->pNext;
-    }
-    return curr;
+    return pCurr;
 }
 
 template <typename T>
@@ -143,15 +131,11 @@ void TList<T>::pushFront(int key, T val) {
 
 template <typename T>
 void TList<T>::pushBack(int key, T val) {
-    TNode<T>* newNode = new TNode<T>(key, val);
     if (pFirst == nullptr) {
-        pFirst = newNode;
-        pLast = pFirst;
-        pLast->pNext = pStop;
-        pCurr = pFirst;
-        pPrev = nullptr;
+        pushFront(key, val);
         return;
     }
+    TNode<T>* newNode = new TNode<T>(key, val);
     pLast->pNext = newNode;
     pPrev = pLast;
     pLast = newNode;
@@ -161,24 +145,23 @@ void TList<T>::pushBack(int key, T val) {
 
 template <typename T>
 void TList<T>::InsertAfterKey(int key, T val, int pKey) {
-    TNode<T>* curr = pFirst;
+    TNode<T>* curr = pFirst; // TODO: search
     while ((curr != pStop) && (curr->Key != pKey)){
         curr = curr->pNext;
     }
-    if (curr->Key != pKey)
+    if (curr->Key != pKey) // TODO: nullptr
         throw exception("no such key");
     if (curr == pLast){
         pushBack(key, val);
         return;
     }
-    TNode<T>* newNode = new TNode<T>(key, val);
-    TNode<T>* tmp = curr->pNext;
-    curr->pNext = newNode;
-    newNode->pNext = tmp;
+    TNode<T>* newNode = new TNode<T>(key, val, pCurr->pNext); // TODO
+    pCurr->pNext = newNode;
 }
+
 template <typename T>
 void TList<T>::InsertBeforeKey(int key, T val, int pKey) {
-    TNode<T>* curr = pFirst;
+    TNode<T>* curr = pFirst; // TODO: search
     TNode<T>* prev = nullptr;
     while ((curr != pStop) && (curr->Key != pKey)) {
         prev = curr;
@@ -202,7 +185,7 @@ void TList<T>::popKey(int pKey){
     TNode<T>* curr = pFirst;
     TNode<T>* prev = nullptr;
     TNode<T>* tmp;
-    while ((curr != pStop) && (curr->Key != pKey)) {
+    while ((curr != pStop) && (curr->Key != pKey)) { // TODO: search
         prev = curr;
         curr = curr->pNext;
     }
@@ -260,7 +243,7 @@ void TList<T>::popBack() {
 }
 
 template <typename T>
-int TList<T>::size() {
+int TList<T>::size() const {
     TNode<T>* curr = pFirst;
     int size = 0;
     while (curr != pStop) {
@@ -288,7 +271,7 @@ template <typename T>
 const TList<T>& TList<T>::operator=(const TList<T>& list) {
     if (this == &list)
         return *this;
-    while (!IsEmpty()) {
+    while (!IsEmpty()) { // TODO: clear
         popFront();
     }
     TNode<T>* curr = list.pFirst;
@@ -298,8 +281,5 @@ const TList<T>& TList<T>::operator=(const TList<T>& list) {
     }
     return *this;
 }
-
-
-
 
 #endif

@@ -38,7 +38,7 @@ protected:
         }
     }
 
-    void parseMonom(const std::string& monom, double& coeff, int& x, int& y, int& z) {
+    void parseMonom(const string& monom, double& coeff, int& x, int& y, int& z) {
         int i = 0;
         double coeff_sign = 1.0;
         if ((monom[i] == '+') || (monom[i] == '-')) {
@@ -133,7 +133,7 @@ protected:
             Monom current = monoms[i];
             polinom_lst.pushBack(current.degree, current);
         }
-    }  //не актуально
+    }
     void simplify() {
         TRingHeadList<Monom> tmp;
         tmp = polinom_lst;
@@ -151,7 +151,7 @@ protected:
             curr = curr->pNext;
         }
         polinom_lst = tmp;
-    } //не актуально
+    }
 
 
     string convertPolinom() const {
