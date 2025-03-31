@@ -1,6 +1,6 @@
-#pragma once
 #ifndef RING_HEAD_LIST_H
 #define RING_HEAD_LIST_H
+
 #include "Head_list.h"
 
 template <typename T>
@@ -29,16 +29,11 @@ TRingHeadList<T>::TRingHeadList(const TRingHeadList<T>& list) : THeadList<T>(lis
     pStop = pHead;
 };
 template <typename T>
-TRingHeadList<T>::~TRingHeadList() {
-    pStop = nullptr;
-    if (pLast!=nullptr)
-        pLast->pNext = nullptr;
-    THeadList<T>::~THeadList();
-};
+TRingHeadList<T>::~TRingHeadList() { };
 
 
 template <typename T>
-const TRingHeadList<T>& TRingHeadList<T>::operator=(const TRingHeadList<T>& list) {
+const TRingHeadList<T>& TRingHeadList<T>::operator=(const TRingHeadList<T>& list) { // TODO: HeadList::operator=(list) + ...
     if (this == &list)
         return *this;
     while (!IsEmpty()) {
@@ -81,7 +76,5 @@ void TRingHeadList<T>::popBack() {
     if (pLast != nullptr)
         pLast->pNext = pHead;
 };
-
-
 
 #endif

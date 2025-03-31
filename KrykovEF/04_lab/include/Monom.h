@@ -1,18 +1,20 @@
 #ifndef MONOM_H
 #define MONOM_H
-#pragma once
+
 #include <iostream>
 #include <string>
 #include <cmath>
+
 using namespace std;
 
-class Monom {
+class Monom { // TODO: split .h + .cpp
 public:
 	double coef;
 	int degree;
 	Monom() : coef(0), degree(0) {};
+    Monom(const std::string& str);
 	Monom(int degree, double coef) :coef(coef), degree(degree) {};
-    string convertMonom() const{
+    string convertMonom() const{ // get_str
         string result;
         if (coef != 1 && coef != -1) {
             char buffer[32];
@@ -54,7 +56,7 @@ public:
         }
         return result;
     }
-    double calculate_monom(double x_val, double y_val, double z_val) const {
+    double operator()(double x_val, double y_val, double z_val) const {
         int x = degree / 100;
         int y = (degree / 10) % 10;
         int z = degree % 10;
@@ -78,7 +80,7 @@ public:
         return Monom(degree, coef - m.coef);
     }
     Monom operator*(const Monom& m) {
-        if (degree != m.degree)
+        if (degree != m.degree) // TODO: error
             throw exception("wrong degree");
         return Monom(degree * 2, coef * m.coef);
     }
@@ -106,7 +108,5 @@ public:
     }
 
 };
-
-
 
 #endif

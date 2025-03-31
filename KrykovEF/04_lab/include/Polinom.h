@@ -1,6 +1,6 @@
-#pragma once
 #ifndef POLINOM_H
 #define POLINOM_H
+
 #include "Monom.h"
 #include "Ring_head_list.h"
 #include <vector>
@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class Polinom {
+class Polinom { // TODO: split .h + .cpp
 protected:
 	TRingHeadList<Monom> polinom_lst;
 	string polinom_str;
@@ -38,7 +38,7 @@ protected:
         }
     }
 
-    void parseMonom(const string& monom, double& coeff, int& x, int& y, int& z) {
+    void parseMonom(const string& monom, double& coeff, int& x, int& y, int& z) { // TODO: Monom(const std::string& str)
         int i = 0;
         double coeff_sign = 1.0;
         if ((monom[i] == '+') || (monom[i] == '-')) {
@@ -113,48 +113,7 @@ protected:
         }
     }
 
-
-    //не актуально
-    void sortPolinom() {
-        vector<Monom> monoms;
-
-        TNode<Monom>* curr = polinom_lst.get_pFirst();
-        while (curr != polinom_lst.get_pStop()) {
-            monoms.push_back(curr->Data); 
-            curr = curr->pNext;
-        }
-        sort(begin(monoms), end(monoms));
-
-        while (!polinom_lst.IsEmpty()) {
-            polinom_lst.popFront();
-        }
-
-        for (int i = 0; i < monoms.size(); i++) {
-            Monom current = monoms[i];
-            polinom_lst.pushBack(current.degree, current);
-        }
-    }
-    void simplify() {
-        TRingHeadList<Monom> tmp;
-        tmp = polinom_lst;
-        TNode<Monom>* curr = tmp.get_pFirst();
-        TNode<Monom>* prev = nullptr;
-        prev = curr;
-        curr = curr->pNext;
-        while (curr != tmp.get_pStop())
-        {
-            if (prev->Key == curr->Key) {
-                curr->Data = Monom(curr->Key, curr->Data.coef + prev->Data.coef);
-                tmp.popKey(prev->Key);
-            }
-            prev = curr;
-            curr = curr->pNext;
-        }
-        polinom_lst = tmp;
-    }
-
-
-    string convertPolinom() const {
+    string convertPolinom() const { // get_str
         string result;
         bool firstMonom = true; TRingHeadList<Monom> tmp;
         tmp = polinom_lst;
@@ -175,7 +134,7 @@ public:
 	Polinom() {
 		polinom_lst = TRingHeadList<Monom>();
 	}
-	Polinom(string source) {
+	Polinom(const std::string& source) {
         string str = source;
         //str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
         string tmp;
@@ -208,11 +167,11 @@ public:
         polinom_str = convertPolinom();
 	}
 
-    double calculate_polinom(double x_val, double y_val, double z_val) const {
+    double operator()(double x_val, double y_val, double z_val) const {
         TNode<Monom>* curr = polinom_lst.get_pFirst();
         double res = 0;
         while (curr != polinom_lst.get_pStop()){
-            res += curr->Data.calculate_monom(x_val, y_val, z_val);
+            res += curr->Data(x_val, y_val, z_val);
             curr = curr->pNext;
         }
         return res;

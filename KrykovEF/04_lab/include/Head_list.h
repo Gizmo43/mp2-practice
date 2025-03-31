@@ -1,7 +1,8 @@
-#pragma once
 #ifndef HEAD_LIST_H
 #define HEAD_LIST_H
+
 #include "List.h"
+
 template <typename T>
 class THeadList :public TList<T>{
 protected:
@@ -46,7 +47,7 @@ void THeadList<T>::popFront(){
 };
 
 template <typename T>
-const THeadList<T>& THeadList<T>::operator=(const THeadList<T>& list) {
+const THeadList<T>& THeadList<T>::operator=(const THeadList<T>& list) { // TODO: call List::operator=(list)
     if (this == &list)
         return *this;
     while (!IsEmpty()) {
@@ -59,11 +60,5 @@ const THeadList<T>& THeadList<T>::operator=(const THeadList<T>& list) {
     }
     return *this;
 }
-
-
-
-
-
-
 
 #endif
