@@ -11,7 +11,7 @@ TEST(THeadList, can_push_element_front)
     THeadList<int> list;
     for (int i = 0; i < 5; i++)
         list.pushFront(0,i);
-    EXPECT_EQ(4, list.get_first_data());
+    EXPECT_EQ(4, list.get_pFirst()->Data);
 }
 
 TEST(THeadList, can_push_element_back)
@@ -19,7 +19,7 @@ TEST(THeadList, can_push_element_back)
     THeadList<int> list;
     for (int i = 0; i < 5; i++)
         list.pushBack(0, i);
-    EXPECT_EQ(4, list.get_last_data());
+    EXPECT_EQ(4, list.get_pCurr()->Data);
 }
 
 
@@ -75,7 +75,7 @@ TEST(TRingHeadList, can_push_element_front)
     TRingHeadList<int> list;
     for (int i = 0; i < 5; i++)
         list.pushFront(0, i);
-    EXPECT_EQ(4, list.get_first_data());
+    EXPECT_EQ(4, list.get_pFirst()->Data);
     EXPECT_EQ(4, 4);
 }
 
@@ -84,7 +84,7 @@ TEST(TRingHeadList, can_push_element_back)
     TRingHeadList<int> list;
     for (int i = 0; i < 5; i++)
         list.pushBack(0, i);
-    EXPECT_EQ(4, list.get_last_data());
+    EXPECT_EQ(4, list.get_pCurr()->Data);
 }
 
 TEST(TRingHeadList, can_push_element_both)
@@ -94,8 +94,8 @@ TEST(TRingHeadList, can_push_element_both)
         list.pushBack(0, i);
         list.pushFront(0, i);
     }
-    EXPECT_EQ(4, list.get_last_data());
-    EXPECT_EQ(4, list.get_first_data());
+    EXPECT_EQ(4, list.get_pCurr()->Data);
+    EXPECT_EQ(4, list.get_pFirst()->Data);
 }
 
 TEST(TRingHeadList, can_pop_element_back)
@@ -105,7 +105,7 @@ TEST(TRingHeadList, can_pop_element_back)
         list.pushBack(0, i);
     }
     list.popBack();
-    EXPECT_EQ(3, list.get_last_data());
+    EXPECT_EQ(3, list.get_pCurr()->Data);
 }
 TEST(TRingHeadList, can_pop_element_front)
 {
@@ -114,7 +114,7 @@ TEST(TRingHeadList, can_pop_element_front)
         list.pushFront(0, i);
     }
     list.popFront();
-    EXPECT_EQ(3, list.get_first_data());
+    EXPECT_EQ(3, list.get_pFirst()->Data);
 }
 
 TEST(TRingHeadList, test_op_1)

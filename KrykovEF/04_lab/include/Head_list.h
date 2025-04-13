@@ -48,16 +48,11 @@ void THeadList<T>::popFront(){
 
 template <typename T>
 const THeadList<T>& THeadList<T>::operator=(const THeadList<T>& list) { // TODO: call List::operator=(list)
-    if (this == &list)
-        return *this;
-    while (!IsEmpty()) {
-        popFront();
-    }
-    TNode<T>* curr = list.pFirst;
-    while (curr != list.pStop) {
-        pushBack(curr->Key, curr->Data);
-        curr = curr->pNext;
-    }
+    TList<T>::operator=(list);
+    pHead = new TNode<T>(-1, T());
+    pHead->pNext = pFirst;
+    pCurr = pFirst;
+    pPrev = pHead;
     return *this;
 }
 

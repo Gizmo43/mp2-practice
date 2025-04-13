@@ -34,20 +34,10 @@ TRingHeadList<T>::~TRingHeadList() { };
 
 template <typename T>
 const TRingHeadList<T>& TRingHeadList<T>::operator=(const TRingHeadList<T>& list) { // TODO: HeadList::operator=(list) + ...
-    if (this == &list)
-        return *this;
-    while (!IsEmpty()) {
-        popFront();
-    }
-    TNode<T>* curr = list.pFirst;
-    while (curr != list.pStop) {
-        pushBack(curr->Key, curr->Data);
-        curr = curr->pNext;
-    }
+    THeadList<T>::operator=(list);
     pStop = pHead;
-    if (pLast != nullptr) {
-        pLast->pNext = pHead;
-    }
+    if (pLast != nullptr)
+        pLast->pNext = pStop;
     return *this;
 }
 

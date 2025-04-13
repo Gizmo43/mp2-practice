@@ -54,8 +54,8 @@ TEST(Monom, can_mult_monom_2)
 
 TEST(Monom, cant_mult_monom_with_wrong_deg)
 {
-    Monom mn1(3, 3);
-    Monom mn2(4, 4);
+    Monom mn1(666, 3);
+    Monom mn2(444, 4);
     ASSERT_ANY_THROW(mn2 * mn1);
 }
 
@@ -85,6 +85,13 @@ TEST(Polinom, can_create_Polinom_3)
     EXPECT_EQ("4.00", pl.get_polinom_str());
 }
 
+TEST(Polinom, can_create_Polinom_4)
+{
+    Polinom pl("4+2.00x1y2z3-2.00x1y2z3");
+    //cout << pl.get_polinom_str();
+    EXPECT_EQ("4.00", pl.get_polinom_str());
+}
+
 TEST(Polinom, cant_create_Polinom_with_wrong_deg)
 {
     ASSERT_ANY_THROW(Polinom pl("2x10y2z3+x3z4-5"));
@@ -94,25 +101,25 @@ TEST(Polinom, cant_create_Polinom_with_wrong_deg)
 TEST(Polinom, can_calculate_Polinom_1)
 {
     Polinom pl("2x1y2z3+x3z4-7.5");
-    EXPECT_EQ(289.5, pl.calculate_polinom(1, 2, 3));
+    EXPECT_EQ(289.5, pl(1, 2, 3));
 }
 
 TEST(Polinom, can_calculate_Polinom_2)
 {
     Polinom pl("-5+3.2x1y1z1+2x1y2z3+x3z4+6x1y1z1-2x3z4+7x2y3");
-    EXPECT_EQ(241.2, pl.calculate_polinom(1, 2, 3));
+    EXPECT_EQ(241.2, pl(1, 2, 3));
 }
 
 TEST(Polinom, can_calculate_Polinom_3)
 {
     Polinom pl("2x1y2z3+x3z4");
-    EXPECT_EQ(0, pl.calculate_polinom(0, 0, 0));
+    EXPECT_EQ(0, pl(0, 0, 0));
 }
 
 TEST(Polinom, can_calculate_Polinom_4)
 {
     Polinom pl("7.5");
-    EXPECT_EQ(7.5, pl.calculate_polinom(10, 10, 10));
+    EXPECT_EQ(7.5, pl(10, 10, 10));
 }
 
 

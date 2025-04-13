@@ -26,7 +26,7 @@ public:
     T Top() {
         if (IsEmpty())
             throw "stack is empty";
-        return stack.get_first_data();
+        return stack.get_pFirst()->Data;
 
     };
     bool IsEmpty() { return (stack.IsEmpty()); };
