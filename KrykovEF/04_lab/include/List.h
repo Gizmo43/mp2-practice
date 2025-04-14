@@ -51,7 +51,7 @@ public:
     int size() const;
 
     void reset() { pCurr = pFirst; pPrev = nullptr; }
-    virtual void next(); // TODO: nullptr
+    virtual void next();
 
     virtual const TList<T>& operator=(const TList<T>& s);
     bool operator==(const TList<T>& s) const;
@@ -62,7 +62,6 @@ public:
 
     TNode<T>* get_pFirst() const { return pFirst; }
     TNode<T>* get_pCurr() const { return pCurr; }
-    TNode<T>* get_pPrev() const { return pPrev; }
 };
 
 template <typename T>
@@ -86,7 +85,7 @@ TList<T>::TList(const TList<T>& list) :  pCurr(nullptr), pPrev(nullptr),
 }
 
 template <typename T>
-TList<T>::~TList() { // TODO: clear
+TList<T>::~TList() {
     clearList();
 }
 
@@ -137,20 +136,18 @@ void TList<T>::pushBack(int key, T val) {
 
 template <typename T>
 void TList<T>::InsertAfterKey(int key, T val, int pKey) {
-    //search_key(pKey);
-    if (search_key(pKey) == nullptr) // TODO: nullptr
+    if (search_key(pKey) == nullptr)
         throw exception("no such key");
     if (pCurr == pLast){
         pushBack(key, val);
         return;
     }
-    TNode<T>* newNode = new TNode<T>(key, val, pCurr->pNext); // TODO
+    TNode<T>* newNode = new TNode<T>(key, val, pCurr->pNext);
     pCurr->pNext = newNode;
 }
 
 template <typename T>
 void TList<T>::InsertBeforeKey(int key, T val, int pKey) {
-    //search_key(pKey);
     if (search_key(pKey) == nullptr)
         throw exception("no such key");
     if (pCurr == pFirst) {
@@ -167,7 +164,6 @@ void TList<T>::popKey(int pKey){
     if (IsEmpty())
         throw exception("list empty");
     TNode<T>* tmp;
-    //search_key(pKey);
     if (search_key(pKey) == nullptr)
         throw exception("no such key");
     if (pCurr == pFirst) {

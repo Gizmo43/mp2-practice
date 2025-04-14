@@ -47,9 +47,8 @@ void THeadList<T>::popFront(){
 };
 
 template <typename T>
-const THeadList<T>& THeadList<T>::operator=(const THeadList<T>& list) { // TODO: call List::operator=(list)
+const THeadList<T>& THeadList<T>::operator=(const THeadList<T>& list) {
     TList<T>::operator=(list);
-    pHead = new TNode<T>(-1, T());
     pHead->pNext = pFirst;
     pCurr = pFirst;
     pPrev = pHead;

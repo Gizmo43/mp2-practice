@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Polinom { // TODO: split .h + .cpp
+class Polinom {
 protected:
 	TRingHeadList<Monom> polinom_lst;
 	string polinom_str;

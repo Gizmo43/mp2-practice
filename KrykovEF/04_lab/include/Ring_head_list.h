@@ -33,7 +33,7 @@ TRingHeadList<T>::~TRingHeadList() { };
 
 
 template <typename T>
-const TRingHeadList<T>& TRingHeadList<T>::operator=(const TRingHeadList<T>& list) { // TODO: HeadList::operator=(list) + ...
+const TRingHeadList<T>& TRingHeadList<T>::operator=(const TRingHeadList<T>& list) {
     THeadList<T>::operator=(list);
     pStop = pHead;
     if (pLast != nullptr)

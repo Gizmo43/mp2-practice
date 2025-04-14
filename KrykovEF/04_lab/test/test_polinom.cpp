@@ -125,3 +125,56 @@ TEST(Polinom, can_calculate_Polinom_4)
 
 
 
+
+TEST(Polinom, can_add_Polinom_1)
+{
+    Polinom pl1("2x1y2z3+x3z4-7.5");
+    Polinom pl2("3x1y2z3+2x3z4-1.5");
+    Polinom pl3 = pl1 + pl2;
+    //cout << pl.get_polinom_str();
+    EXPECT_EQ("-9.00+5.00x1y2z3+3.00x3z4", pl3.get_polinom_str());
+}
+
+
+
+TEST(Polinom, can_add_Polinom_2)
+{
+    Polinom pl1("2x1y2z3+x3z4-7.5");
+    Monom mn2(123,4);
+    Polinom pl3 = pl1 + mn2;
+    //cout << pl.get_polinom_str();
+    EXPECT_EQ("-7.50+6.00x1y2z3+x3z4", pl3.get_polinom_str());
+}
+
+TEST(Polinom, can_mult_Polinom_1)
+{
+    Polinom pl("2x1y2z3+x3z4-7.5");
+    pl = pl * 2;
+    //cout << pl.get_polinom_str();
+    EXPECT_EQ("-15.00+4.00x1y2z3+2.00x3z4", pl.get_polinom_str());
+}
+
+TEST(Polinom, can_sub_Polinom_1)
+{
+    Polinom pl1("2x1y2z3+x3z4-7.5");
+    Polinom pl2("3x1y2z3+2x3z4-1.5");
+    Polinom pl3 = pl2 - pl1;
+    //cout << pl.get_polinom_str();
+    EXPECT_EQ("6.00+1.00x1y2z3+x3z4", pl3.get_polinom_str());
+}
+
+
+
+TEST(Polinom, can_sub_Polinom_2)
+{
+    Polinom pl1("2x1y2z3+x3z4-7.5");
+    Monom mn2(123, 4);
+    Polinom pl3 = pl1 - mn2;
+    //cout << pl.get_polinom_str();
+    EXPECT_EQ("-7.50-2.00x1y2z3+x3z4", pl3.get_polinom_str());
+}
+
+
+
+
+

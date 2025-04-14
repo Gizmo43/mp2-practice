@@ -154,7 +154,7 @@ Monom Monom::operator*(const Monom& m) {
     return Monom(degree + m.degree, coef * m.coef);
 }
 Monom Monom::operator*(double m) {
-    return Monom(degree, coef * m);
+    return Monom(degree, (coef * m));
 }
 const Monom& Monom::operator=(const Monom& m) {
     return Monom(m.degree, m.coef);
