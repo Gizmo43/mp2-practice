@@ -154,7 +154,7 @@ TEST(Polinom, can_mult_Polinom_1)
     EXPECT_EQ("-15.00+4.00x1y2z3+2.00x3z4", pl.get_polinom_str());
 }
 
-TEST(Polinom, can_sub_Polinom_1)
+TEST(Polinom, can_sub_Polinom_1) //не работает из-за нерабочего умножения
 {
     Polinom pl1("2x1y2z3+x3z4-7.5");
     Polinom pl2("3x1y2z3+2x3z4-1.5");

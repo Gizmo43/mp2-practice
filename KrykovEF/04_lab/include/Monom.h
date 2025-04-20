@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class Monom { // TODO: split .h + .cpp
+class Monom { 
 public:
 	double coef;
 	int degree;

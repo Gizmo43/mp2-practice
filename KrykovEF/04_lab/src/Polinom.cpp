@@ -7,27 +7,32 @@ void Polinom::orderPush(int key, double val) {
         return;
     }
     polinom_lst.reset();
+    int k = 0;
     while (!(polinom_lst.isEnded()) && polinom_lst.get_pCurr()->Key < key) {
         polinom_lst.next();
+        k++;
     }
     if (!(polinom_lst.isEnded()) && polinom_lst.get_pCurr()->Key == key) {
         polinom_lst.get_pCurr()->Data.coef += val;
 
         if (polinom_lst.get_pCurr()->Data.coef == 0.0) {
-            if (polinom_lst.get_pPrev() == nullptr) { // TODO: pPrev
-                polinom_lst.popFront();
-            }
-            else {
-                polinom_lst.popKey(key);
-            }
+            polinom_lst.popKey(key);         
         }
     }
     else {
-        if (polinom_lst.get_pPrev() == nullptr) { // TODO: pPrev
-            polinom_lst.pushFront(key, monom);
+        if (k == 1) { 
+            if (key > polinom_lst.get_pCurr()->Key)
+                polinom_lst.pushBack(key, monom);
+            if (key < polinom_lst.get_pCurr()->Key)
+                polinom_lst.pushFront(key, monom);
+        }
+        else if(polinom_lst.isEnded()) {
+            polinom_lst.pushBack(key, monom);
         }
         else {
-            polinom_lst.InsertAfterKey(key, monom, polinom_lst.get_pPrev()->Key);
+            Monom mn = polinom_lst.get_pCurr()->Data;
+            mn = mn;
+            polinom_lst.InsertBeforeKey(key, monom, polinom_lst.get_pCurr()->Key);
         }
     }
     polinom_str = get_str();
@@ -35,7 +40,7 @@ void Polinom::orderPush(int key, double val) {
 
 
 
-string Polinom::get_str() const { // get_str
+string Polinom::get_str() const { 
     string result;
     bool firstMonom = true; TRingHeadList<Monom> tmp;
     tmp = polinom_lst;
@@ -131,6 +136,8 @@ Polinom Polinom::operator*(const Monom& m) { // ? monom с нулевым коэ
     polinom_lst.reset();
     Polinom tmp;
     Monom mon;
+    if(m.coef==0)
+        return Polinom();
     while (!(polinom_lst.isEnded())) {
         mon = polinom_lst.get_pCurr()->Data * m;
         tmp.polinom_lst.pushBack(mon.degree, mon);
@@ -152,17 +159,20 @@ Polinom Polinom::operator-(double c)
 }
 
 
-Polinom Polinom::operator*(double c)
+Polinom Polinom::operator*(double c) //не работает, спросить!
 {
     polinom_lst.reset();
     Polinom tmp;
+    tmp.polinom_lst.reset();
     Monom mon = polinom_lst.get_pCurr()->Data;
     while (!(polinom_lst.isEnded())) {
         mon = mon * c;
         tmp.polinom_lst.pushBack(mon.degree, mon);
         polinom_lst.next();
         mon = polinom_lst.get_pCurr()->Data;
+        tmp.get_str();
     }
+
     return tmp;
 }
 
@@ -171,22 +181,40 @@ Polinom Polinom::operator*(double c)
 Polinom Polinom::operator+(const Polinom& p1)
 {
     Polinom p = p1;
-
     polinom_lst.reset();
     p.polinom_lst.reset();
     Polinom answ;
-    while (!(polinom_lst.isEnded()) && !(p.polinom_lst.isEnded())) { // TODO: слияние упорядоченных списков с проверкой, что степени совпали у мономов
-        answ.orderPush(polinom_lst.get_pCurr()->Key, polinom_lst.get_pCurr()->Data.coef);
-        answ.orderPush(p.polinom_lst.get_pCurr()->Key, p.polinom_lst.get_pCurr()->Data.coef);
-        polinom_lst.next();
-        p.polinom_lst.next();
+    while (!polinom_lst.isEnded() && !p.polinom_lst.isEnded())
+    {
+        if (polinom_lst.get_pCurr()->Key == p.polinom_lst.get_pCurr()->Key)
+        {
+            double sum_coef = polinom_lst.get_pCurr()->Data.coef + p.polinom_lst.get_pCurr()->Data.coef;
+            if (sum_coef != 0)
+            {
+                answ.orderPush(polinom_lst.get_pCurr()->Key, sum_coef);
+            }
+            polinom_lst.next();
+            p.polinom_lst.next();
+        }
+        else if (polinom_lst.get_pCurr()->Key < p.polinom_lst.get_pCurr()->Key)
+        {
+            answ.orderPush(polinom_lst.get_pCurr()->Key, polinom_lst.get_pCurr()->Data.coef);
+            polinom_lst.next();
+        }
+        else
+        {
+            answ.orderPush(p.polinom_lst.get_pCurr()->Key, p.polinom_lst.get_pCurr()->Data.coef);
+            p.polinom_lst.next();
+        }
     }
-    while (!(polinom_lst.isEnded()))
+
+    while (!polinom_lst.isEnded())
     {
         answ.orderPush(polinom_lst.get_pCurr()->Key, polinom_lst.get_pCurr()->Data.coef);
         polinom_lst.next();
     }
-    while (!(p.polinom_lst.isEnded()))
+
+    while (!p.polinom_lst.isEnded())
     {
         answ.orderPush(p.polinom_lst.get_pCurr()->Key, p.polinom_lst.get_pCurr()->Data.coef);
         p.polinom_lst.next();
@@ -218,12 +246,11 @@ Polinom Polinom::operator*(const Polinom& p1)
     polinom_lst.reset();
     p.polinom_lst.reset();
 
-    Polinom answ;
+    Polinom answ = *this;
     while (!(polinom_lst.isEnded())) {
         while (!(p.polinom_lst.isEnded())) {
-            Monom mon = polinom_lst.get_pCurr()->Data * p.polinom_lst.get_pCurr()->Data;
-            answ.orderPush(mon.degree, mon.coef);
-            p.polinom_lst.next();
+            Monom mn = p.polinom_lst.get_pCurr()->Data;
+            answ = answ * mn;
         }
         polinom_lst.next();
         p.polinom_lst.next();
