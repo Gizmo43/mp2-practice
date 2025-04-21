@@ -149,9 +149,9 @@ TEST(Polinom, can_add_Polinom_2)
 TEST(Polinom, can_mult_Polinom_1)
 {
     Polinom pl("2x1y2z3+x3z4-7.5");
-    pl = pl * 2;
+    Polinom res = pl * 2;
     //cout << pl.get_polinom_str();
-    EXPECT_EQ("-15.00+4.00x1y2z3+2.00x3z4", pl.get_polinom_str());
+    EXPECT_EQ("-15.00+4.00x1y2z3+2.00x3z4", res.get_polinom_str());
 }
 
 TEST(Polinom, can_sub_Polinom_1) //не работает из-за нерабочего умножения

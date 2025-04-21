@@ -159,7 +159,7 @@ Polinom Polinom::operator-(double c)
 }
 
 
-Polinom Polinom::operator*(double c) //не работает, спросить!
+Polinom Polinom::operator*(double c) 
 {
     polinom_lst.reset();
     Polinom tmp;
@@ -170,7 +170,7 @@ Polinom Polinom::operator*(double c) //не работает, спросить!
         tmp.polinom_lst.pushBack(mon.degree, mon);
         polinom_lst.next();
         mon = polinom_lst.get_pCurr()->Data;
-        tmp.get_str();
+        tmp.polinom_str = tmp.get_str();
     }
 
     return tmp;
@@ -233,7 +233,7 @@ Polinom Polinom::operator-(const Polinom& p)
     }
     Polinom tmp = p;
     tmp = tmp * (-1.0);
-    tmp.polinom_str = tmp.get_str();
+    //tmp.polinom_str = tmp.get_str();
     return Polinom::operator+(tmp);
 }
 
