@@ -160,7 +160,7 @@ TEST(Polinom, can_sub_Polinom_1) //не работает из-за нерабочего умножения
     Polinom pl2("3x1y2z3+2x3z4-1.5");
     Polinom pl3 = pl2 - pl1;
     //cout << pl.get_polinom_str();
-    EXPECT_EQ("6.00+1.00x1y2z3+x3z4", pl3.get_polinom_str());
+    EXPECT_EQ("6.00+x1y2z3+x3z4", pl3.get_polinom_str());
 }
 
 
@@ -172,6 +172,20 @@ TEST(Polinom, can_sub_Polinom_2)
     Polinom pl3 = pl1 - mn2;
     //cout << pl.get_polinom_str();
     EXPECT_EQ("-7.50-2.00x1y2z3+x3z4", pl3.get_polinom_str());
+}
+
+TEST(Polinom, sub_equal_polinoms_returns_empty) {
+    Polinom pl1("3x2y-5z");
+    Polinom pl2("3x2y-5z");
+    Polinom res = pl1 - pl2;
+    EXPECT_TRUE(res.get_polinom_str().empty());
+}
+
+TEST(Polinom, can_mult_two_polinoms) {
+    Polinom pl1("2x1y2z3+x3z4-7.5+x4y4z4");
+    Polinom pl2("3x1y2z3+2x3z4-1.5");
+    Polinom res = pl1 * pl2;
+    EXPECT_EQ("11.25-25.50x1y2z3+6.00x2y4z6-16.50x3z4+7.00x4y2z7-1.50x4y4z4+3.00x5y6z7+2.00x6z8+2.00x7y4z8", res.get_polinom_str());
 }
 
 

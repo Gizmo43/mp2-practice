@@ -105,7 +105,8 @@ double Polinom::operator()(double x_val, double y_val, double z_val) const {
 string Polinom::get_polinom_str() const { return polinom_str; }
 
 const Polinom& Polinom::operator=(const Polinom& p) {
-    if (this != &p) return *this;
+    if (this == &p)
+        return *this;
     polinom_lst = p.polinom_lst;
     polinom_str = p.polinom_str;
     return *this;
@@ -164,14 +165,19 @@ Polinom Polinom::operator*(double c)
     polinom_lst.reset();
     Polinom tmp;
     tmp.polinom_lst.reset();
-    Monom mon = polinom_lst.get_pCurr()->Data;
+    if (c == 0.0)
+        return tmp;
     while (!(polinom_lst.isEnded())) {
+        Monom mon = polinom_lst.get_pCurr()->Data;
         mon = mon * c;
         tmp.polinom_lst.pushBack(mon.degree, mon);
         polinom_lst.next();
         mon = polinom_lst.get_pCurr()->Data;
         tmp.polinom_str = tmp.get_str();
     }
+
+
+    tmp.polinom_str = tmp.get_str();
 
     return tmp;
 }
@@ -242,21 +248,21 @@ Polinom Polinom::operator-(const Polinom& p)
 
 Polinom Polinom::operator*(const Polinom& p1)
 {
+    Polinom answ;
     Polinom p = p1;
-    polinom_lst.reset();
-    p.polinom_lst.reset();
-
-    Polinom answ = *this;
-    while (!(polinom_lst.isEnded())) {
-        while (!(p.polinom_lst.isEnded())) {
-            Monom mn = p.polinom_lst.get_pCurr()->Data;
-            answ = answ * mn;
+    polinom_lst.reset(); 
+    while (!polinom_lst.isEnded()) {
+        Monom m1 = polinom_lst.get_pCurr()->Data; 
+        p.polinom_lst.reset(); 
+        while (!p.polinom_lst.isEnded()) {
+            Monom m2 = p.polinom_lst.get_pCurr()->Data; 
+            Monom product = m1 * m2;
+            answ.orderPush(product.degree, product.coef); 
+            p.polinom_lst.next();
         }
         polinom_lst.next();
-        p.polinom_lst.next();
     }
     answ.polinom_str = answ.get_str();
-
     return answ;
 }
 

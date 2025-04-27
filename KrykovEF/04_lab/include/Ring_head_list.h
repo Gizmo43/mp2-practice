@@ -14,6 +14,8 @@ public:
     virtual void pushBack(int key, T val);
     virtual void popFront();
     virtual void popBack();
+
+    void reset();
 };
 
 
@@ -66,5 +68,11 @@ void TRingHeadList<T>::popBack() {
     if (pLast != nullptr)
         pLast->pNext = pHead;
 };
+
+template <typename T>
+void TRingHeadList<T>::reset() {
+    pCurr = pFirst;
+    pPrev = pHead; 
+}
 
 #endif
