@@ -31,7 +31,7 @@ public:
     TList() : pFirst(nullptr), pCurr(nullptr), pPrev(nullptr),
         pLast(nullptr), pStop(nullptr) {};
     TList(const TList<T>& list);
-    ~TList();
+    virtual ~TList();
 
     virtual void clearList();
 

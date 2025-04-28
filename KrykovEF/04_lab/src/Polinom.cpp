@@ -7,7 +7,7 @@ void Polinom::orderPush(int key, double val) {
         return;
     }
     polinom_lst.reset();
-    int k = 0;
+    int k = 0; // TODO: remove
     while (!(polinom_lst.isEnded()) && polinom_lst.get_pCurr()->Key < key) {
         polinom_lst.next();
         k++;
@@ -90,8 +90,7 @@ Polinom::Polinom(const std::string& source) {
 }
 
 double Polinom::operator()(double x_val, double y_val, double z_val) const {
-    TRingHeadList<Monom> tmp;
-    tmp = polinom_lst;
+    TRingHeadList<Monom> tmp = polinom_lst;
     tmp.reset();
     double res = 0;
     while (!(tmp.isEnded())) {
@@ -133,7 +132,7 @@ Polinom Polinom::operator-(const Monom& m) {
 }
 
 
-Polinom Polinom::operator*(const Monom& m) { // ? monom с нулевым коэффициентом
+Polinom Polinom::operator*(const Monom& m) {
     polinom_lst.reset();
     Polinom tmp;
     Monom mon;
@@ -156,7 +155,7 @@ Polinom Polinom::operator+(double c)
 
 Polinom Polinom::operator-(double c)
 {
-    return Polinom::operator+((-1.0) * c);
+    return Polinom::operator+(-c);
 }
 
 
@@ -164,7 +163,6 @@ Polinom Polinom::operator*(double c)
 {
     polinom_lst.reset();
     Polinom tmp;
-    tmp.polinom_lst.reset();
     if (c == 0.0)
         return tmp;
     while (!(polinom_lst.isEnded())) {
@@ -172,11 +170,7 @@ Polinom Polinom::operator*(double c)
         mon = mon * c;
         tmp.polinom_lst.pushBack(mon.degree, mon);
         polinom_lst.next();
-        mon = polinom_lst.get_pCurr()->Data;
-        tmp.polinom_str = tmp.get_str();
     }
-
-
     tmp.polinom_str = tmp.get_str();
 
     return tmp;
@@ -239,7 +233,6 @@ Polinom Polinom::operator-(const Polinom& p)
     }
     Polinom tmp = p;
     tmp = tmp * (-1.0);
-    //tmp.polinom_str = tmp.get_str();
     return Polinom::operator+(tmp);
 }
 

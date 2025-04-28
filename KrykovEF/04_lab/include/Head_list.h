@@ -10,7 +10,7 @@ protected:
 public:
     THeadList();
     THeadList(const THeadList<T>& list);
-    ~THeadList();
+    virtual ~THeadList();
     virtual void pushFront(int key, T val);
     virtual void popFront();
     virtual const THeadList<T>& operator=(const THeadList<T>& s);

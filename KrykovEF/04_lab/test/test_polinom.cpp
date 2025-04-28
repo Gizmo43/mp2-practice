@@ -188,7 +188,26 @@ TEST(Polinom, can_mult_two_polinoms) {
     EXPECT_EQ("11.25-25.50x1y2z3+6.00x2y4z6-16.50x3z4+7.00x4y2z7-1.50x4y4z4+3.00x5y6z7+2.00x6z8+2.00x7y4z8", res.get_polinom_str());
 }
 
+TEST(Polinom, can_multi_fullform) {
+    Polinom p1("-1+x");
+    Polinom p2("x+1");
+    EXPECT_EQ(p1 * p2, Polinom("x^2-1"));
+}
 
+TEST(Polinom, can_multi_fullform_1) {
+    Polinom p1("x-1");
+    Polinom p2("x+1");
+    EXPECT_EQ(p1 * p2, Polinom("x^2-1"));
+}
 
+TEST(Polinom, can_multi_fullform_2) {
+    Polinom p1("-1+x");
+    Polinom p2("x^2+x+1");
+    EXPECT_EQ(p1 * p2, Polinom("x^3-1"));
+}
 
-
+TEST(Polinom, can_multi_fullform_2) {
+    Polinom p1("1+x");
+    Polinom p2("x^2-x+1");
+    EXPECT_EQ(p1 * p2, Polinom("x^3+1"));
+}
