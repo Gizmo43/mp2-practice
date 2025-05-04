@@ -6,32 +6,26 @@ void Polinom::orderPush(int key, double val) {
         polinom_lst.pushBack(key, monom);
         return;
     }
-    polinom_lst.reset();
-    int k = 0; // TODO: remove
-    while (!(polinom_lst.isEnded()) && polinom_lst.get_pCurr()->Key < key) {
-        polinom_lst.next();
-        k++;
-    }
-    if (!(polinom_lst.isEnded()) && polinom_lst.get_pCurr()->Key == key) {
-        polinom_lst.get_pCurr()->Data.coef += val;
 
+    polinom_lst.reset();
+    while (!polinom_lst.isEnded() && polinom_lst.get_pCurr()->Key < key) {
+        polinom_lst.next();
+    }
+
+    if (!polinom_lst.isEnded() && polinom_lst.get_pCurr()->Key == key) {
+        polinom_lst.get_pCurr()->Data.coef += val;
         if (polinom_lst.get_pCurr()->Data.coef == 0.0) {
-            polinom_lst.popKey(key);         
+            polinom_lst.popKey(key);
         }
     }
     else {
-        if (k == 1) { 
-            if (key > polinom_lst.get_pCurr()->Key)
-                polinom_lst.pushBack(key, monom);
-            if (key < polinom_lst.get_pCurr()->Key)
-                polinom_lst.pushFront(key, monom);
-        }
-        else if(polinom_lst.isEnded()) {
+        if (polinom_lst.isEnded()) {
             polinom_lst.pushBack(key, monom);
         }
+        else if (polinom_lst.get_pCurr() == polinom_lst.get_pFirst()) {
+            polinom_lst.pushFront(key, monom);
+        }
         else {
-            Monom mn = polinom_lst.get_pCurr()->Data;
-            mn = mn;
             polinom_lst.InsertBeforeKey(key, monom, polinom_lst.get_pCurr()->Key);
         }
     }
@@ -68,35 +62,32 @@ Polinom::Polinom(const Polinom& p) {
 Polinom::Polinom(const std::string& source) {
     string str = source;
     //str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
-    int i = 0;
-    string tmp;
 
-    for (i = 0; i < str.length(); i++) {
-        char ch = str[i];
-        if (ch == '+' || ch == '-') {
-            if (!tmp.empty()) {
-                Monom tmp_mn(tmp);
-                orderPush(tmp_mn.degree, tmp_mn.coef);
-                tmp.clear();
-            }
+    int pos = 0;
+    while (pos < str.length()) {
+        int next_pos = pos + 1;
+        while (next_pos < str.length() && str[next_pos] != '+' && str[next_pos] != '-') {
+            next_pos++;
         }
-        tmp += ch;
-    }
-    if (!tmp.empty()) {
-        Monom tmp_mn(tmp);
-        orderPush(tmp_mn.degree, tmp_mn.coef);
+
+        string monom_str = str.substr(pos, next_pos - pos);
+        if (!monom_str.empty()) {
+            Monom tmp_mn(monom_str);
+            orderPush(tmp_mn.degree, tmp_mn.coef);            
+        }
+        pos = next_pos;
     }
     polinom_str = get_str();
 }
 
 double Polinom::operator()(double x_val, double y_val, double z_val) const {
-    TRingHeadList<Monom> tmp = polinom_lst;
-    tmp.reset();
+    Polinom tmp(*this);
+    tmp.polinom_lst.reset();
     double res = 0;
-    while (!(tmp.isEnded())) {
-        Monom monom = tmp.get_pCurr()->Data;
+    while (!(tmp.polinom_lst.isEnded())) {
+        Monom monom = tmp.polinom_lst.get_pCurr()->Data;
         res += monom(x_val, y_val, z_val);
-        tmp.next();
+        tmp.polinom_lst.next();
     }
     return res;
 }

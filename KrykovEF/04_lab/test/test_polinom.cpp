@@ -154,7 +154,7 @@ TEST(Polinom, can_mult_Polinom_1)
     EXPECT_EQ("-15.00+4.00x1y2z3+2.00x3z4", res.get_polinom_str());
 }
 
-TEST(Polinom, can_sub_Polinom_1) //не работает из-за нерабочего умножения
+TEST(Polinom, can_sub_Polinom_1) 
 {
     Polinom pl1("2x1y2z3+x3z4-7.5");
     Polinom pl2("3x1y2z3+2x3z4-1.5");
@@ -191,23 +191,23 @@ TEST(Polinom, can_mult_two_polinoms) {
 TEST(Polinom, can_multi_fullform) {
     Polinom p1("-1+x");
     Polinom p2("x+1");
-    EXPECT_EQ(p1 * p2, Polinom("x^2-1"));
+    EXPECT_EQ(p1 * p2, Polinom("x2-1"));
 }
 
 TEST(Polinom, can_multi_fullform_1) {
     Polinom p1("x-1");
     Polinom p2("x+1");
-    EXPECT_EQ(p1 * p2, Polinom("x^2-1"));
+    EXPECT_EQ(p1 * p2, Polinom("x2-1"));
 }
 
 TEST(Polinom, can_multi_fullform_2) {
     Polinom p1("-1+x");
-    Polinom p2("x^2+x+1");
-    EXPECT_EQ(p1 * p2, Polinom("x^3-1"));
+    Polinom p2("x2+x+1");
+    EXPECT_EQ(p1 * p2, Polinom("x3-1"));
 }
 
-TEST(Polinom, can_multi_fullform_2) {
+TEST(Polinom, can_multi_fullform_3) {
     Polinom p1("1+x");
-    Polinom p2("x^2-x+1");
-    EXPECT_EQ(p1 * p2, Polinom("x^3+1"));
+    Polinom p2("x2-x+1");
+    EXPECT_EQ(p1 * p2, Polinom("x3+1"));
 }

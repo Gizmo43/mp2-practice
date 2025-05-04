@@ -6,67 +6,46 @@
 Monom::Monom() : coef(0), degree(0) {};
 Monom::Monom(const std::string& monom) {
     int i = 0, x = 0, y = 0, z = 0;
-    double coeff_sign = 1.0;
-    if ((monom[i] == '+') || (monom[i] == '-')) {
-        coeff_sign = 1.0;
-        if (monom[i] == '-') {
-            coeff_sign = -1.0;
-        }
+    double coeff = 1.0;
+    bool has_coeff = false;
+
+    if (i < monom.length() && (monom[i] == '+' || monom[i] == '-')) {
+        if (monom[i] == '-') 
+            coeff = -1.0;
         i++;
     }
 
-    //Коэффициент
-    double coeff = 0.0;
-    string tmp;
-    while ((i < monom.length()) && ((isdigit(monom[i])) || (monom[i] == '.'))) {// "." для дробных коэффициентов
-        if (monom[i] == '.') {
-            i++;
-            double fr = 0.1;
-            while ((i < monom.length()) && (isdigit(monom[i]))) {
-                tmp = monom[i];
-                coeff += (stod(tmp)) * fr;
-                fr *= 0.1;
-                i++;
-            }
-        }
-        else {
-            tmp = monom[i];
-            coeff = coeff * 10 + (stod(tmp));
-            i++;
-        }
-    }
-    coeff *= coeff_sign;
-    if (coeff == 0.0)
-        coeff = 1.0 * coeff_sign;
 
-    // Степени
+    string coeff_str;
+    while (i < monom.length() && (isdigit(monom[i]) || monom[i] == '.')) {
+        coeff_str += monom[i];
+        has_coeff = true;
+        i++;
+    }
+
+    if (!coeff_str.empty()) {
+        coeff *= stod(coeff_str);
+    }
+
+
     while (i < monom.length()) {
         char var = monom[i];
         if (var == 'x' || var == 'y' || var == 'z') {
-            if (var == 'x') {
-                x = 1;
-            }
-            else if (var == 'y') {
-                y = 1;
-            }
-            else if (var == 'z') {
-                z = 1;
-            }
             i++;
-            int deg = 0;
-            while ((i < monom.length()) && (isdigit(monom[i]))) {
-                tmp = monom[i];
-                deg = deg * 10 + (stod(tmp));
-                i++;
+            int deg = 1;
+
+            if (i < monom.length() && isdigit(monom[i])) {
+                deg = 0;
+                while (i < monom.length() && isdigit(monom[i])) {
+                    deg = deg * 10 + (monom[i] - '0');
+                    i++;
+                }
             }
-            if (var == 'x') {
-                x = deg;
-            }
-            else if (var == 'y') {
-                y = deg;
-            }
-            else if (var == 'z') {
-                z = deg;
+
+            switch (var) {
+            case 'x': x = deg; break;
+            case 'y': y = deg; break;
+            case 'z': z = deg; break;
             }
         }
         else {
@@ -74,8 +53,9 @@ Monom::Monom(const std::string& monom) {
         }
     }
 
-    if ((x > 9) || (y > 9) || (z > 9)) {
-        throw exception("wrong degree");
+
+    if (x > 9 || y > 9 || z > 9) {
+        throw invalid_argument("wrong deg");
     }
 
     coef = coeff;
@@ -83,7 +63,7 @@ Monom::Monom(const std::string& monom) {
 
 };
 Monom::Monom(int degree, double coef) :coef(coef), degree(degree) {};
-string Monom::get_str() const { // get_str
+string Monom::get_str() const { 
     string result;
     if (coef != 1 && coef != -1) {
         char buffer[32];
@@ -149,7 +129,7 @@ Monom Monom::operator-(const Monom& m) {
     return Monom(degree, coef - m.coef);
 }
 Monom Monom::operator*(const Monom& m) {
-    if (degree + m.degree > 999) // TODO: error
+    if (degree + m.degree > 999) 
         throw exception("wrong degree");
     return Monom(degree + m.degree, coef * m.coef);
 }
