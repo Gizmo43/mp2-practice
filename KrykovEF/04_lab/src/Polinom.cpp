@@ -175,6 +175,10 @@ Polinom Polinom::operator+(const Polinom& p1)
     polinom_lst.reset();
     p.polinom_lst.reset();
     Polinom answ;
+    if (polinom_lst.get_pFirst() == nullptr) {
+        answ = p;
+        return answ;
+    }
     while (!polinom_lst.isEnded() && !p.polinom_lst.isEnded())
     {
         if (polinom_lst.get_pCurr()->Key == p.polinom_lst.get_pCurr()->Key)
@@ -238,12 +242,14 @@ Polinom Polinom::operator*(const Polinom& p1)
     while (!polinom_lst.isEnded()) {
         Monom m1 = polinom_lst.get_pCurr()->Data; 
         p.polinom_lst.reset(); 
-        while (!p.polinom_lst.isEnded()) {
+        /*while (!p.polinom_lst.isEnded()) {
             Monom m2 = p.polinom_lst.get_pCurr()->Data; 
             Monom product = m1 * m2;
             answ.orderPush(product.degree, product.coef); 
             p.polinom_lst.next();
-        }
+        }*/
+        Polinom tmp = p * m1;
+        answ = answ + tmp;
         polinom_lst.next();
     }
     answ.polinom_str = answ.get_str();
