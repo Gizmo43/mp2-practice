@@ -68,7 +68,7 @@ template <typename T>
 TList<T>::TList(const TList<T>& list) :  pCurr(nullptr), pPrev(nullptr),
         pLast(nullptr) {
     pFirst = nullptr;
-    pStop = nullptr; 
+    pStop = list.pStop; 
     pPrev = nullptr;
     if(list.pFirst == nullptr)
         return;
